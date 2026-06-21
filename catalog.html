@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Каталог книг — Ebook</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="catalog.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-book-open"></i>
+                <span>Ebook</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Главная</a>
+                <a href="catalog.html" class="nav-link active">Каталог</a>
+                <a href="#" class="nav-link">Аренда</a>
+                <a href="favorites.html" class="nav-link">Избранное</a>
+            </nav>
+            <div class="header-actions">
+                <button class="icon-btn" id="searchToggle"><i class="fas fa-search"></i></button>
+                <div style="position: relative;">
+                    <button class="icon-btn cart-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge">0</span>
+                    </button>
+                    <div id="cartDropdown" class="cart-dropdown">
+                        <div class="cart-header">
+                            <h3><i class="fas fa-shopping-cart"></i> Моя корзина</h3>
+                        </div>
+                        <div id="cartItems" class="cart-items">
+                            <div class="cart-empty">
+                                <i class="fas fa-shopping-cart"></i>
+                                <p>Корзина пуста</p>
+                                <small>Добавьте книги из каталога</small>
+                            </div>
+                        </div>
+                        <div class="cart-footer">
+                            <div class="cart-total">
+                                <span>Итого:</span>
+                                <span id="cartTotal">0 ₽</span>
+                            </div>
+                            <button id="checkoutBtn" class="cart-checkout-btn">Оформить заказ</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="authButtons">
+                    <button class="btn-outline" id="openLoginModal">Войти</button>
+                </div>
+                <div id="userMenuContainer"></div>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+        </div>
+        <div class="search-bar" id="searchBar">
+            <div class="container">
+                <input type="text" placeholder="Поиск книг, авторов, жанров..." id="searchInput">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Хлебные крошки -->
+        <div class="breadcrumbs">
+            <div class="container">
+                <a href="index.html">Главная</a>
+                <span>/</span>
+                <span class="current">Каталог</span>
+            </div>
+        </div>
+
+        <!-- Заголовок каталога -->
+        <section class="catalog-header">
+            <div class="container">
+                <h1>Каталог книг</h1>
+                <p>Выберите книгу для покупки или аренды</p>
+            </div>
+        </section>
+
+        <!-- Фильтры -->
+        <section class="filters-section">
+            <div class="container">
+                <div class="filters-wrapper">
+                    <div class="filter-group">
+                        <label for="genreFilter">Жанр</label>
+                        <select id="genreFilter">
+                            <option value="all">Все жанры</option>
+                            <option value="классика">Классика</option>
+                            <option value="фантастика">Фантастика</option>
+                            <option value="бизнес">Бизнес-литература</option>
+                            <option value="приключения">Приключения</option>
+                            <option value="философия">Философия</option>
+                            <option value="психология">Психология</option>
+                            <option value="финансы">Финансы</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="sortFilter">Сортировка</label>
+                        <select id="sortFilter">
+                            <option value="popular">По популярности</option>
+                            <option value="price_asc">Сначала дешёвые</option>
+                            <option value="price_desc">Сначала дорогие</option>
+                            <option value="title">По названию</option>
+                            <option value="new">Сначала новые</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group price-filter">
+                        <label>Цена</label>
+                        <div class="price-inputs">
+                            <input type="number" id="priceMin" placeholder="От" min="0">
+                            <span>—</span>
+                            <input type="number" id="priceMax" placeholder="До" min="0">
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Тип</label>
+                        <div class="type-filters">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="filterBuy" checked>
+                                Покупка
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="filterRent" checked>
+                                Аренда
+                            </label>
+                        </div>
+                    </div>
+
+                    <button id="applyFiltersBtn" class="btn-primary">Применить</button>
+                    <button id="resetFiltersBtn" class="btn-outline">Сбросить</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Результаты -->
+        <section class="catalog-results">
+            <div class="container">
+                <div class="results-header">
+                    <span id="resultsCount">Загрузка...</span>
+                    <div class="view-options">
+                        <button class="view-btn active" data-view="grid"><i class="fas fa-th"></i></button>
+                        <button class="view-btn" data-view="list"><i class="fas fa-list"></i></button>
+                    </div>
+                </div>
+                <div class="books-grid" id="booksGrid">
+                    <!-- Книги будут подгружены через JS -->
+                </div>
+                <div id="pagination" class="pagination">
+                    <!-- Пагинация -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-col">
+                <div class="logo"><i class="fas fa-book-open"></i> Ebook</div>
+                <p>Ваша цифровая библиотека. Покупайте, арендуйте, читайте где угодно.</p>
+                <div class="socials">
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-vk"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Каталог</h4>
+                <ul>
+                    <li><a href="#">Художественная</a></li>
+                    <li><a href="#">Бизнес-литература</a></li>
+                    <li><a href="#">Психология</a></li>
+                    <li><a href="#">Техническая</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Помощь</h4>
+                <ul>
+                    <li><a href="#">Как арендовать</a></li>
+                    <li><a href="#">Вопросы и ответы</a></li>
+                    <li><a href="#">Правила сервиса</a></li>
+                    <li><a href="#">Поддержка</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Контакты</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> support@ebook.ru</li>
+                    <li><i class="fas fa-phone-alt"></i> 8 (800) 555-35-35</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Ebook. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <!-- Модальное окно авторизации -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Вход в аккаунт</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            
+            <div id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="example@mail.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Пароль</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <button id="loginBtn" class="btn-primary auth-submit">Войти</button>
+                <p class="auth-switch">
+                    Нет аккаунта? <a href="#" id="switchToRegister">Зарегистрироваться</a>
+                </p>
+                <p class="auth-switch">
+                    <a href="#" id="forgotPassword">Забыли пароль?</a>
+                </p>
+            </div>
+            
+            <div id="registerForm" class="auth-form" style="display: none;">
+                <div class="form-group">
+                    <label for="regUsername">Имя пользователя</label>
+                    <input type="text" id="regUsername" placeholder="Иван Иванов" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input type="email" id="regEmail" placeholder="example@mail.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Пароль</label>
+                    <input type="password" id="regPassword" placeholder="минимум 6 символов" required>
+                </div>
+                <div class="form-group">
+                    <label for="regConfirmPassword">Подтвердите пароль</label>
+                    <input type="password" id="regConfirmPassword" placeholder="••••••••" required>
+                </div>
+                <button id="registerBtn" class="btn-primary auth-submit">Зарегистрироваться</button>
+                <p class="auth-switch">
+                    Уже есть аккаунт? <a href="#" id="switchToLogin">Войти</a>
+                </p>
+            </div>
+            
+            <div id="resetForm" class="auth-form" style="display: none;">
+                <div class="form-group">
+                    <label for="resetEmail">Email</label>
+                    <input type="email" id="resetEmail" placeholder="example@mail.com" required>
+                </div>
+                <button id="resetBtn" class="btn-primary auth-submit">Сбросить пароль</button>
+                <p class="auth-switch">
+                    <a href="#" id="backToLogin">Вернуться ко входу</a>
+                </p>
+            </div>
+            
+            <div id="authMessage" class="auth-message"></div>
+        </div>
+    </div>
+
+    <!-- Профиль пользователя -->
+    <div id="userMenu" class="user-menu" style="display: none;">
+        <div class="user-info">
+            <i class="fas fa-user-circle"></i>
+            <span id="userName"></span>
+        </div>
+        <div class="user-dropdown">
+            <a href="#" id="userProfileBtn"><i class="fas fa-user"></i> Профиль</a>
+            <a href="#" id="userOrdersBtn"><i class="fas fa-book"></i> Мои книги</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+        </div>
+    </div>
+
+    <script type="module" src="catalog.js"></script>
+</body>
+</html>

@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Помощь и поддержка — Ebook</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Дополнительные стили для FAQ страницы */
+        .faq-hero {
+            background: linear-gradient(135deg, #1e3c3a, #2a5f5b);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .faq-hero h1 {
+            color: white;
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+            margin-bottom: 1rem;
+        }
+
+        .faq-hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        .faq-nav {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 80px;
+            z-index: 99;
+            background: rgba(255,255,245,0.95);
+            backdrop-filter: blur(8px);
+        }
+
+        .faq-nav-container {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 16px 24px;
+            scrollbar-width: thin;
+        }
+
+        .faq-nav-btn {
+            background: transparent;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #5a6e7c;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+            font-size: 0.95rem;
+        }
+
+        .faq-nav-btn:hover {
+            background: #f1f5f9;
+            color: #1e3c3a;
+        }
+
+        .faq-nav-btn.active {
+            background: #1e3c3a;
+            color: white;
+        }
+
+        .faq-section {
+            padding: 60px 0;
+            border-bottom: 1px solid #f0ede8;
+        }
+
+        .faq-section:last-child {
+            border-bottom: none;
+        }
+
+        .faq-section h2 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .faq-section h2 i {
+            font-size: 2rem;
+            color: #2a5f5b;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            border: 1px solid #f0ede8;
+            transition: 0.2s;
+        }
+
+        .faq-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.07);
+        }
+
+        .faq-question {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #1e3c3a;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .faq-question i {
+            color: #2a5f5b;
+            font-size: 1.2rem;
+        }
+
+        .faq-answer {
+            color: #5a6e7c;
+            line-height: 1.6;
+        }
+
+        .rules-list, .steps-list {
+            list-style: none;
+            margin-top: 16px;
+        }
+
+        .rules-list li, .steps-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0ede8;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .rules-list li:last-child, .steps-list li:last-child {
+            border-bottom: none;
+        }
+
+        .rules-list li i, .steps-list li i {
+            color: #2a5f5b;
+            margin-top: 3px;
+        }
+
+        .contact-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .contact-card i {
+            font-size: 2.5rem;
+            color: #2a5f5b;
+            margin-bottom: 16px;
+        }
+
+        .contact-card h3 {
+            margin-bottom: 12px;
+        }
+
+        .contact-card p {
+            color: #5a6e7c;
+            margin-bottom: 20px;
+        }
+
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .back-to-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 30px 0 20px;
+            color: #1e3c3a;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .back-to-home:hover {
+            gap: 12px;
+            color: #2a5f5b;
+        }
+
+        @media (max-width: 768px) {
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+            .faq-section h2 {
+                font-size: 1.5rem;
+            }
+            .faq-nav-container {
+                padding: 12px 16px;
+            }
+            .faq-nav-btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-book-open"></i>
+                <span>Ebook</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Главная</a>
+                <a href="index.html#catalog" class="nav-link">Каталог</a>
+                <a href="index.html#rent" class="nav-link">Аренда</a>
+                <a href="faq.html" class="nav-link active">Помощь</a>
+            </nav>
+            <div class="header-actions">
+                <button class="icon-btn" id="searchToggle"><i class="fas fa-search"></i></button>
+                <div style="position: relative;">
+                    <button class="icon-btn cart-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge">0</span>
+                    </button>
+                    <div id="cartDropdown" class="cart-dropdown">
+                        <div class="cart-header">
+                            <h3><i class="fas fa-shopping-cart"></i> Моя корзина</h3>
+                        </div>
+                        <div id="cartItems" class="cart-items">
+                            <div class="cart-empty">
+                                <i class="fas fa-shopping-cart"></i>
+                                <p>Корзина пуста</p>
+                                <small>Добавьте книги из каталога</small>
+                            </div>
+                        </div>
+                        <div class="cart-footer">
+                            <div class="cart-total">
+                                <span>Итого:</span>
+                                <span id="cartTotal">0 ₽</span>
+                            </div>
+                            <button id="checkoutBtn" class="cart-checkout-btn">Оформить заказ</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="authButtons">
+                    <button class="btn-outline" id="openLoginModal">Войти</button>
+                </div>
+                <div id="userMenuContainer"></div>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+        </div>
+        <div class="search-bar" id="searchBar">
+            <div class="container">
+                <input type="text" placeholder="Поиск книг, авторов, жанров..." id="searchInput">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="faq-hero">
+            <div class="container">
+                <h1><i class="fas fa-question-circle"></i> Помощь и поддержка</h1>
+                <p>Ответы на часто задаваемые вопросы, правила сервиса и контакты</p>
+            </div>
+        </section>
+
+        <div class="faq-nav">
+            <div class="container faq-nav-container">
+                <button class="faq-nav-btn" data-section="help">🆘 Помощь</button>
+                <button class="faq-nav-btn" data-section="how-to-rent">📖 Как арендовать</button>
+                <button class="faq-nav-btn" data-section="qa">💬 Вопросы и ответы</button>
+                <button class="faq-nav-btn" data-section="rules">⚖️ Правила сервиса</button>
+                <button class="faq-nav-btn" data-section="support">📞 Поддержка</button>
+                <button class="faq-nav-btn" data-section="how-to-rent">💰 Как арендовать</button>
+            </div>
+        </div>
+
+        <!-- Раздел: Помощь -->
+        <section id="help" class="faq-section">
+            <div class="container">
+                <h2><i class="fas fa-life-ring"></i> Помощь</h2>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-user-plus"></i>
+                            Как зарегистрироваться?
+                        </div>
+                        <div class="faq-answer">
+                            Нажмите на кнопку «Войти» в правом верхнем углу, затем выберите «Зарегистрироваться». 
+                            Укажите имя, email и пароль (минимум 6 символов). После регистрации вам нужно будет 
+                            подтвердить email — проверьте почту!
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-key"></i>
+                            Забыли пароль?
+                        </div>
+                        <div class="faq-answer">
+                            На странице входа нажмите «Забыли пароль?», введите ваш email, и мы отправим 
+                            инструкции по восстановлению доступа. Следуйте ссылке в письме, чтобы создать новый пароль.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-shopping-cart"></i>
+                            Как добавить книгу в корзину?
+                        </div>
+                        <div class="faq-answer">
+                            На карточке книги нажмите кнопку «Купить» или «Аренда». Книга автоматически добавится в корзину, 
+                            появится уведомление об этом. Иконка корзины покажет количество добавленных товаров.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-credit-card"></i>
+                            Какие способы оплаты доступны?
+                        </div>
+                        <div class="faq-answer">
+                            Мы принимаем банковские карты (Visa, MasterCard, МИР), электронные кошельки (ЮMoney, QIWI) 
+                            и платежи через СБП. Все платежи защищены и проходят через надежные платежные шлюзы.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-mobile-alt"></i>
+                            На каких устройствах можно читать?
+                        </div>
+                        <div class="faq-answer">
+                            Читайте на любых устройствах: компьютер, планшет, смартфон (iOS, Android). 
+                            Ваш прогресс синхронизируется автоматически через облако.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-book-reader"></i>
+                            Как читать купленные книги?
+                        </div>
+                        <div class="faq-answer">
+                            После покупки книга появляется в вашей личной библиотеке. Зайдите в раздел «Мои книги» 
+                            в меню пользователя, нажмите на обложку и начните чтение. Доступ офлайн сохраняется.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Раздел: Как арендовать -->
+        <section id="how-to-rent" class="faq-section">
+            <div class="container">
+                <h2><i class="fas fa-calendar-alt"></i> Как арендовать книгу</h2>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-search"></i>
+                            Шаг 1: Выберите книгу
+                        </div>
+                        <div class="faq-answer">
+                            Найдите книгу через поиск или каталог. На карточке книги указаны цены для покупки и аренды.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-hand-pointer"></i>
+                            Шаг 2: Нажмите "Аренда"
+                        </div>
+                        <div class="faq-answer">
+                            Нажмите кнопку «Аренда ХХХ ₽» — книга добавится в корзину. Выберите срок аренды: 
+                            7, 14 или 30 дней.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-shopping-bag"></i>
+                            Шаг 3: Оформите заказ
+                        </div>
+                        <div class="faq-answer">
+                            Перейдите в корзину, проверьте выбранные книги и сроки аренды. Нажмите «Оформить заказ» 
+                            и оплатите удобным способом.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-book-open"></i>
+                            Шаг 4: Начните чтение
+                        </div>
+                        <div class="faq-answer">
+                            После оплаты книга появится в разделе «Мои книги». У вас будет доступ на выбранный срок. 
+                            Таймер покажет оставшееся время.
+                        </div>
+                    </div>
+                </div>
+                <section id="price">
+                    <div style="margin-top: 32px; padding: 24px; background: #f9f7f2; border-radius: 24px;">
+                        <h3 style="color: #1e3c3a; margin-bottom: 16px;"><i class="fas fa-clock"></i> Тарифы аренды</h3>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: space-around;">
+                            <div style="text-align: center;">
+                                <span style="font-size: 2rem;">📖</span>
+                                <div style="font-weight: 800; color: #1e3c3a;">7 дней</div>
+                                <div style="color: #e67e22;">99 ₽</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <span style="font-size: 2rem;">📚</span>
+                                <div style="font-weight: 800; color: #1e3c3a;">14 дней</div>
+                                <div style="color: #e67e22;">169 ₽</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <span style="font-size: 2rem;">🏛️</span>
+                                <div style="font-weight: 800; color: #1e3c3a;">30 дней</div>
+                                <div style="color: #e67e22;">299 ₽</div>
+                            </div>
+                        </div>
+                        <div class="faq-answer" style="margin-top: 20px; text-align: center;">
+                            💡 <strong>Совет:</strong> Если книга понравилась, вы можете выкупить её с вычетом арендной платы!
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <!-- Раздел: Вопросы и ответы -->
+        <section id="qa" class="faq-section">
+            <div class="container">
+                <h2><i class="fas fa-comments"></i> Часто задаваемые вопросы</h2>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-sync-alt"></i>
+                            Можно ли продлить аренду?
+                        </div>
+                        <div class="faq-answer">
+                            Да! Зайдите в раздел «Мои книги», найдите арендованную книгу и нажмите «Продлить». 
+                            Вы можете продлить на любой срок до окончания текущей аренды. Доплата спишется автоматически.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-exchange-alt"></i>
+                            Можно ли вернуть книгу досрочно?
+                        </div>
+                        <div class="faq-answer">
+                            К сожалению, досрочный возврат арендованных книг невозможен. Но вы можете дочитывать 
+                            книгу до конца оплаченного срока. Средства за неиспользованные дни не возвращаются.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-download"></i>
+                            Можно ли скачать книгу на устройство?
+                        </div>
+                        <div class="faq-answer">
+                            Да, все книги можно загрузить для чтения офлайн в официальном приложении Ebook. 
+                            Файлы защищены DRM и доступны только через нашу платформу.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-user-friends"></i>
+                            Можно ли делиться книгами с друзьями?
+                        </div>
+                        <div class="faq-answer">
+                            Лицензионные соглашения запрещают передачу доступа к книгам третьим лицам. 
+                            Каждая книга предназначена только для личного использования покупателем.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Как работает синхронизация прогресса?
+                        </div>
+                        <div class="faq-answer">
+                            Прогресс чтения автоматически сохраняется в облаке при подключении к интернету. 
+                            Вы можете продолжить чтение с того же места на любом устройстве.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-trash-alt"></i>
+                            Что происходит после окончания аренды?
+                        </div>
+                        <div class="faq-answer">
+                            После окончания срока аренды книга становится недоступной для чтения, но остаётся в 
+                            истории. Вы можете продлить аренду или купить книгу в любое время.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-percent"></i>
+                            Есть ли скидки для постоянных читателей?
+                        </div>
+                        <div class="faq-answer">
+                            Да! Мы предлагаем накопительную систему скидок. Чем больше вы читаете, тем выше ваша 
+                            скидка на покупки и аренду. Подробности в разделе «Профиль» → «Бонусы».
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-award"></i>
+                            Что такое «Выкуп с вычетом аренды»?
+                        </div>
+                        <div class="faq-answer">
+                            Если вы арендовали книгу, а потом решили её купить, стоимость аренды вычитается из 
+                            цены покупки. Вы платите только разницу. Это выгодно!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Раздел: Правила сервиса -->
+        <section id="rules" class="faq-section">
+            <div class="container">
+                <h2><i class="fas fa-gavel"></i> Правила сервиса</h2>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-user-check"></i>
+                            1. Регистрация и аккаунт
+                        </div>
+                        <div class="faq-answer">
+                            <ul class="rules-list">
+                                <li><i class="fas fa-check-circle"></i> Один пользователь — один аккаунт</li>
+                                <li><i class="fas fa-check-circle"></i> Запрещена передача аккаунта третьим лицам</li>
+                                <li><i class="fas fa-check-circle"></i> Вы несёте ответственность за безопасность пароля</li>
+                                <li><i class="fas fa-check-circle"></i> Мы имеем право заблокировать аккаунт при нарушении правил</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-shopping-cart"></i>
+                            2. Покупка и аренда
+                        </div>
+                        <div class="faq-answer">
+                            <ul class="rules-list">
+                                <li><i class="fas fa-check-circle"></i> Оплата производится 100% предоплатой</li>
+                                <li><i class="fas fa-check-circle"></i> Возврат средств за цифровые товары не производится</li>
+                                <li><i class="fas fa-check-circle"></i> Цены могут меняться, но оплаченные заказы не пересчитываются</li>
+                                <li><i class="fas fa-check-circle"></i> Аренда предоставляется на выбранный срок без возможности продления после истечения</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-copyright"></i>
+                            3. Авторские права
+                        </div>
+                        <div class="faq-answer">
+                            <ul class="rules-list">
+                                <li><i class="fas fa-check-circle"></i> Все книги защищены авторским правом</li>
+                                <li><i class="fas fa-check-circle"></i> Запрещено копировать, распространять или модифицировать контент</li>
+                                <li><i class="fas fa-check-circle"></i> Нарушение авторских прав преследуется по закону</li>
+                                <li><i class="fas fa-check-circle"></i> Мы сотрудничаем с правообладателями и издательствами</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-shield-alt"></i>
+                            4. Конфиденциальность
+                        </div>
+                        <div class="faq-answer">
+                            <ul class="rules-list">
+                                <li><i class="fas fa-check-circle"></i> Мы не передаём ваши данные третьим лицам</li>
+                                <li><i class="fas fa-check-circle"></i> Платёжная информация обрабатывается через защищённые шлюзы</li>
+                                <li><i class="fas fa-check-circle"></i> Вы можете удалить аккаунт в любое время</li>
+                                <li><i class="fas fa-check-circle"></i> Данные о чтении используются только для улучшения сервиса</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 32px; padding: 20px; background: #fef3c7; border-radius: 20px; border-left: 4px solid #e67e22;">
+                    <p style="margin: 0; color: #92400e;">
+                        <strong><i class="fas fa-info-circle"></i> Важно:</strong> 
+                        Используя наш сервис, вы автоматически соглашаетесь с данными правилами. 
+                        Мы оставляем за собой право обновлять правила, уведомляя пользователей по email.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Раздел: Поддержка -->
+        <section id="support" class="faq-section">
+            <div class="container">
+                <h2><i class="fas fa-headset"></i> Служба поддержки</h2>
+                <div class="support-grid">
+                    <div class="contact-card">
+                        <i class="fas fa-envelope"></i>
+                        <h3>Email</h3>
+                        <p>По общим вопросам и жалобам</p>
+                        <a href="mailto:support@ebook.ru" style="color: #1e3c3a; font-weight: 600;">support@ebook.ru</a>
+                        <p style="font-size: 0.85rem; margin-top: 12px;">Ответ в течение 24 часов</p>
+                    </div>
+                    <div class="contact-card">
+                        <i class="fas fa-telegram"></i>
+                        <h3>Telegram</h3>
+                        <p>Быстрые вопросы и поддержка</p>
+                        <a href="#" style="color: #1e3c3a; font-weight: 600;">@ebook_support_bot</a>
+                        <p style="font-size: 0.85rem; margin-top: 12px;">Ответ в течение 1 часа</p>
+                    </div>
+                    <div class="contact-card">
+                        <i class="fas fa-phone-alt"></i>
+                        <h3>Горячая линия</h3>
+                        <p>Технические вопросы</p>
+                        <div style="font-weight: 800; color: #1e3c3a; font-size: 1.3rem;">8 (800) 555-35-35</div>
+                        <p style="font-size: 0.85rem; margin-top: 12px;">Пн-Пт: 9:00 - 21:00</p>
+                    </div>
+                    <div class="contact-card">
+                        <i class="fas fa-clock"></i>
+                        <h3>Часы работы поддержки</h3>
+                        <p>Понедельник - Пятница: 9:00 - 21:00 (МСК)</p>
+                        <p>Суббота: 10:00 - 18:00 (МСК)</p>
+                        <p>Воскресенье: Выходной</p>
+                    </div>
+                </div>
+                <div style="margin-top: 40px; padding: 28px; background: #f9f7f2; border-radius: 24px; text-align: center;">
+                    <h3 style="color: #1e3c3a; margin-bottom: 16px;"><i class="fas fa-file-alt"></i> Запрос в поддержку</h3>
+                    <p>Не нашли ответ на свой вопрос? Напишите нам, и мы поможем!</p>
+                    <div style="display: flex; gap: 16px; justify-content: center; margin-top: 24px; flex-wrap: wrap;">
+                        <input type="text" id="supportName" placeholder="Ваше имя" style="padding: 12px 20px; border-radius: 40px; border: 1px solid #cbd5e1; min-width: 200px;">
+                        <input type="email" id="supportEmail" placeholder="Ваш email" style="padding: 12px 20px; border-radius: 40px; border: 1px solid #cbd5e1; min-width: 200px;">
+                        <textarea id="supportMessage" placeholder="Опишите вашу проблему..." rows="3" style="width: 100%; padding: 12px 20px; border-radius: 20px; border: 1px solid #cbd5e1; margin-top: 12px;"></textarea>
+                        <button id="sendSupportBtn" class="btn-primary" style="margin-top: 12px;">Отправить запрос</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="container">
+            <a href="index.html" class="back-to-home">
+                <i class="fas fa-arrow-left"></i> Вернуться на главную
+            </a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-col">
+                <div class="logo"><i class="fas fa-book-open"></i> Ebook</div>
+                <p>Ваша цифровая библиотека. Покупайте, арендуйте, читайте где угодно.</p>
+                <div class="socials">
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-vk"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Каталог</h4>
+                <ul>
+                    <li><a href="#">Художественная</a></li>
+                    <li><a href="#">Бизнес-литература</a></li>
+                    <li><a href="#">Психология</a></li>
+                    <li><a href="#">Техническая</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Помощь</h4>
+                <ul>
+                    <li><a href="faq.html#how-to-rent">Как арендовать</a></li>
+                    <li><a href="faq.html#qa">Вопросы и ответы</a></li>
+                    <li><a href="faq.html#rules">Правила сервиса</a></li>
+                    <li><a href="faq.html#support">Поддержка</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Контакты</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> support@ebook.ru</li>
+                    <li><i class="fas fa-phone-alt"></i> 8 (800) 555-35-35</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Ebook. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { supabase } from './supabase.js';
+        import { checkCurrentUser, getCurrentUser, logoutUser } from './auth.js';
+        import { 
+            registerUser, 
+            loginUser, 
+            resetPassword 
+        } from './auth.js';
+
+        // Корзина
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        function updateCartBadge() {
+            const badge = document.querySelector('.cart-badge');
+            if (badge) {
+                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                badge.innerText = totalItems;
+                badge.style.display = totalItems > 0 ? 'flex' : 'none';
+            }
+        }
+
+        function renderCartDropdown() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            const cartTotalSpan = document.getElementById('cartTotal');
+            if (!cartItemsContainer) return;
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="cart-empty">
+                        <i class="fas fa-shopping-cart"></i>
+                        <p>Корзина пуста</p>
+                        <small>Добавьте книги из каталога</small>
+                    </div>
+                `;
+                if (cartTotalSpan) cartTotalSpan.textContent = '0 ₽';
+                return;
+            }
+            
+            let total = 0;
+            cartItemsContainer.innerHTML = cart.map(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                const typeText = item.type === 'rent' ? 'Аренда' : 'Покупка';
+                return `
+                    <div class="cart-item">
+                        <div class="cart-item-image">
+                            <img src="${item.cover_image || 'https://placehold.co/300x400/e2e8f0/1e3c3a?text=📖'}" alt="${item.title}">
+                        </div>
+                        <div class="cart-item-details">
+                            <div class="cart-item-title">${item.title}</div>
+                            <div class="cart-item-author">${item.author || 'Автор не указан'}</div>
+                            <div class="cart-item-price">${item.price} ₽ × ${item.quantity}<span class="cart-item-type">${typeText}</span></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            if (cartTotalSpan) cartTotalSpan.textContent = total + ' ₽';
+        }
+
+        function toggleCart() {
+            const dropdown = document.getElementById('cartDropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+                renderCartDropdown();
+            }
+        }
+
+        updateCartBadge();
+
+        // Навигация по разделам FAQ
+        const navButtons = document.querySelectorAll('.faq-nav-btn');
+        const sections = {
+            help: document.getElementById('help'),
+            'how-to-rent': document.getElementById('how-to-rent'),
+            qa: document.getElementById('qa'),
+            rules: document.getElementById('rules'),
+            support: document.getElementById('support')
+        };
+
+        function scrollToSection(sectionId) {
+            const section = sections[sectionId];
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            navButtons.forEach(btn => {
+                if (btn.dataset.section === sectionId) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                scrollToSection(btn.dataset.section);
+            });
+        });
+
+        // Проверка hash в URL
+        if (window.location.hash) {
+            const hash = window.location.hash.slice(1);
+            if (sections[hash]) {
+                setTimeout(() => scrollToSection(hash), 100);
+            }
+        }
+
+        // Авторизация
+        const modal = document.getElementById('authModal');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const resetForm = document.getElementById('resetForm');
+        const modalTitle = document.getElementById('modalTitle');
+        const authMessage = document.getElementById('authMessage');
+
+        function openModal() { if (modal) modal.style.display = 'block'; showLoginForm(); }
+        function closeModal() { if (modal) modal.style.display = 'none'; clearAuthMessage(); }
+        function showLoginForm() {
+            if (loginForm) loginForm.style.display = 'block';
+            if (registerForm) registerForm.style.display = 'none';
+            if (resetForm) resetForm.style.display = 'none';
+            if (modalTitle) modalTitle.textContent = 'Вход в аккаунт';
+            clearAuthMessage();
+        }
+        function showRegisterForm() {
+            if (loginForm) loginForm.style.display = 'none';
+            if (registerForm) registerForm.style.display = 'block';
+            if (resetForm) resetForm.style.display = 'none';
+            if (modalTitle) modalTitle.textContent = 'Регистрация';
+            clearAuthMessage();
+        }
+        function showResetForm() {
+            if (loginForm) loginForm.style.display = 'none';
+            if (registerForm) registerForm.style.display = 'none';
+            if (resetForm) resetForm.style.display = 'block';
+            if (modalTitle) modalTitle.textContent = 'Сброс пароля';
+            clearAuthMessage();
+        }
+        function clearAuthMessage() {
+            if (authMessage) {
+                authMessage.textContent = '';
+                authMessage.className = 'auth-message';
+                authMessage.style.display = 'none';
+            }
+        }
+        function showAuthMessage(text, isError = true) {
+            if (authMessage) {
+                authMessage.textContent = text;
+                authMessage.className = `auth-message ${isError ? 'error' : 'success'}`;
+                authMessage.style.display = 'block';
+                setTimeout(() => { if (authMessage) authMessage.style.display = 'none'; }, 3000);
+            }
+        }
+
+        async function handleRegister() {
+            const username = document.getElementById('regUsername')?.value;
+            const email = document.getElementById('regEmail')?.value;
+            const password = document.getElementById('regPassword')?.value;
+            const confirmPassword = document.getElementById('regConfirmPassword')?.value;
+            if (!username || !email || !password) { showAuthMessage('Заполните все поля'); return; }
+            if (password !== confirmPassword) { showAuthMessage('Пароли не совпадают'); return; }
+            if (password.length < 6) { showAuthMessage('Пароль должен содержать минимум 6 символов'); return; }
+            const result = await registerUser(email, password, username);
+            if (result.success) {
+                showAuthMessage('Регистрация успешна! Теперь войдите в аккаунт.', false);
+                setTimeout(() => showLoginForm(), 2000);
+            } else {
+                showAuthMessage(result.error || 'Ошибка регистрации');
+            }
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail')?.value;
+            const password = document.getElementById('loginPassword')?.value;
+            if (!email || !password) { showAuthMessage('Заполните все поля'); return; }
+            const result = await loginUser(email, password);
+            if (result.success) {
+                showAuthMessage('Добро пожаловать!', false);
+                setTimeout(() => { closeModal(); updateUserUI(); }, 1500);
+            } else {
+                showAuthMessage(result.error || 'Неверный email или пароль');
+            }
+        }
+
+        async function handleLogout() {
+            const result = await logoutUser();
+            if (result.success) {
+                alert('Вы вышли из аккаунта');
+                updateUserUI();
+            }
+        }
+
+        async function handleResetPassword() {
+            const email = document.getElementById('resetEmail')?.value;
+            if (!email) { showAuthMessage('Введите email'); return; }
+            const result = await resetPassword(email);
+            if (result.success) {
+                showAuthMessage('Инструкции по сбросу пароля отправлены на email', false);
+                setTimeout(() => showLoginForm(), 3000);
+            } else {
+                showAuthMessage(result.error || 'Ошибка сброса пароля');
+            }
+        }
+
+        async function updateUserUI() {
+            const user = getCurrentUser();
+            const authButtons = document.getElementById('authButtons');
+            const userMenuContainer = document.getElementById('userMenuContainer');
+            const userMenu = document.getElementById('userMenu');
+            const userName = document.getElementById('userName');
+            if (user) {
+                if (authButtons) authButtons.style.display = 'none';
+                if (userMenuContainer && userMenu) {
+                    userMenuContainer.appendChild(userMenu);
+                    userMenu.style.display = 'block';
+                    if (userName) userName.textContent = user.username || user.email?.split('@')[0] || 'Пользователь';
+                }
+            } else {
+                if (authButtons) authButtons.style.display = 'block';
+                if (userMenu) userMenu.style.display = 'none';
+            }
+        }
+
+        function setupAuth() {
+            const openModalBtn = document.getElementById('openLoginModal');
+            if (openModalBtn) openModalBtn.addEventListener('click', openModal);
+            const closeBtn = document.querySelector('.modal-close');
+            if (closeBtn) closeBtn.addEventListener('click', closeModal);
+            window.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+            document.getElementById('switchToRegister')?.addEventListener('click', (e) => { e.preventDefault(); showRegisterForm(); });
+            document.getElementById('switchToLogin')?.addEventListener('click', (e) => { e.preventDefault(); showLoginForm(); });
+            document.getElementById('forgotPassword')?.addEventListener('click', (e) => { e.preventDefault(); showResetForm(); });
+            document.getElementById('backToLogin')?.addEventListener('click', (e) => { e.preventDefault(); showLoginForm(); });
+            document.getElementById('registerBtn')?.addEventListener('click', handleRegister);
+            document.getElementById('loginBtn')?.addEventListener('click', handleLogin);
+            document.getElementById('resetBtn')?.addEventListener('click', handleResetPassword);
+            document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            setupAuth();
+            await checkCurrentUser();
+            await updateUserUI();
+            
+            const cartBtn = document.querySelector('.cart-btn');
+            if (cartBtn) cartBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleCart(); });
+            
+            document.addEventListener('click', (e) => {
+                const dropdown = document.getElementById('cartDropdown');
+                const cartButton = document.querySelector('.cart-btn');
+                if (dropdown && cartButton && !cartButton.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
+
+            // Поиск
+            const searchToggle = document.getElementById('searchToggle');
+            const searchBar = document.getElementById('searchBar');
+            if (searchToggle && searchBar) {
+                searchToggle.addEventListener('click', () => searchBar.classList.toggle('open'));
+            }
+
+            // Мобильное меню
+            const mobileBtn = document.getElementById('mobileMenuBtn');
+            const nav = document.querySelector('.nav');
+            const actions = document.querySelector('.header-actions');
+            if (mobileBtn && nav && actions) {
+                let isOpen = false;
+                mobileBtn.addEventListener('click', () => {
+                    if (!isOpen) {
+                        nav.style.display = 'flex';
+                        actions.style.display = 'flex';
+                        nav.style.flexDirection = 'column';
+                        nav.style.position = 'absolute';
+                        nav.style.top = '70px';
+                        nav.style.left = '0';
+                        nav.style.width = '100%';
+                        nav.style.backgroundColor = 'white';
+                        nav.style.padding = '20px';
+                        actions.style.position = 'absolute';
+                        actions.style.top = '200px';
+                        actions.style.left = '0';
+                        actions.style.width = '100%';
+                        actions.style.justifyContent = 'center';
+                        actions.style.backgroundColor = 'white';
+                        isOpen = true;
+                    } else {
+                        nav.style.display = '';
+                        actions.style.display = '';
+                        nav.style = '';
+                        actions.style = '';
+                        isOpen = false;
+                    }
+                });
+            }
+
+            // Отправка запроса в поддержку
+            const sendBtn = document.getElementById('sendSupportBtn');
+            if (sendBtn) {
+                sendBtn.addEventListener('click', () => {
+                    const name = document.getElementById('supportName')?.value;
+                    const email = document.getElementById('supportEmail')?.value;
+                    const message = document.getElementById('supportMessage')?.value;
+                    if (!name || !email || !message) {
+                        alert('Пожалуйста, заполните все поля');
+                        return;
+                    }
+                    alert('Ваш запрос отправлен! Мы свяжемся с вами в ближайшее время.');
+                    document.getElementById('supportName').value = '';
+                    document.getElementById('supportEmail').value = '';
+                    document.getElementById('supportMessage').value = '';
+                });
+            }
+        });
+    </script>
+
+    <!-- Модальное окно авторизации -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Вход в аккаунт</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="example@mail.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Пароль</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <button id="loginBtn" class="btn-primary auth-submit">Войти</button>
+                <p class="auth-switch">Нет аккаунта? <a href="#" id="switchToRegister">Зарегистрироваться</a></p>
+                <p class="auth-switch"><a href="#" id="forgotPassword">Забыли пароль?</a></p>
+            </div>
+            <div id="registerForm" class="auth-form" style="display: none;">
+                <div class="form-group">
+                    <label for="regUsername">Имя пользователя</label>
+                    <input type="text" id="regUsername" placeholder="Иван Иванов" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input type="email" id="regEmail" placeholder="example@mail.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Пароль</label>
+                    <input type="password" id="regPassword" placeholder="минимум 6 символов" required>
+                </div>
+                <div class="form-group">
+                    <label for="regConfirmPassword">Подтвердите пароль</label>
+                    <input type="password" id="regConfirmPassword" placeholder="••••••••" required>
+                </div>
+                <button id="registerBtn" class="btn-primary auth-submit">Зарегистрироваться</button>
+                <p class="auth-switch">Уже есть аккаунт? <a href="#" id="switchToLogin">Войти</a></p>
+            </div>
+            <div id="resetForm" class="auth-form" style="display: none;">
+                <div class="form-group">
+                    <label for="resetEmail">Email</label>
+                    <input type="email" id="resetEmail" placeholder="example@mail.com" required>
+                </div>
+                <button id="resetBtn" class="btn-primary auth-submit">Сбросить пароль</button>
+                <p class="auth-switch"><a href="#" id="backToLogin">Вернуться ко входу</a></p>
+            </div>
+            <div id="authMessage" class="auth-message"></div>
+        </div>
+    </div>
+
+    <div id="userMenu" class="user-menu" style="display: none;">
+        <div class="user-info">
+            <i class="fas fa-user-circle"></i>
+            <span id="userName"></span>
+        </div>
+        <div class="user-dropdown">
+            <a href="#" id="userProfileBtn"><i class="fas fa-user"></i> Профиль</a>
+            <a href="#" id="userOrdersBtn"><i class="fas fa-book"></i> Мои книги</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+        </div>
+    </div>
+</body>
+</html>
