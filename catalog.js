@@ -241,6 +241,7 @@ async function addToFavorites(bookId) {
         
         favorites.push(bookId);
         showToast('Добавлено в избранное', 'Книга сохранена в избранном', 'success');
+        // Перерисовываем с текущими фильтрами
         filterBooks();
         return true;
     } catch (error) {
@@ -268,6 +269,7 @@ async function removeFromFavorites(bookId) {
         
         favorites = favorites.filter(id => id !== bookId);
         showToast('Удалено из избранного', 'Книга удалена из избранного', 'success');
+        // Перерисовываем с текущими фильтрами
         filterBooks();
         return true;
     } catch (error) {
@@ -685,7 +687,11 @@ async function handleLogin() {
             closeModal();
             await updateUserUI();
             await loadFavorites();
-            filterBooks();
+            allBooks = await loadBooksFromSupabase();
+            filteredBooks = [...allBooks];
+            updateResultsCount();
+            currentPage = 1;
+            renderBooks();
         }, 1500);
     } else {
         showAuthMessage(result.error || 'Неверный email или пароль');
@@ -698,7 +704,11 @@ async function handleLogout() {
         showToast('Выход из аккаунта', 'Вы успешно вышли', 'success');
         await updateUserUI();
         favorites = [];
-        filterBooks();
+        allBooks = await loadBooksFromSupabase();
+        filteredBooks = [...allBooks];
+        updateResultsCount();
+        currentPage = 1;
+        renderBooks();
         cart = [];
         saveCart();
     } else {

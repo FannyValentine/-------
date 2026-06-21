@@ -195,6 +195,7 @@ async function loadPopularBooks() {
 
 // ========== РАБОТА С ИЗБРАННЫМ ==========
 let favorites = [];
+let allBooks = [];
 
 async function loadFavorites() {
     const user = getCurrentUser();
@@ -245,6 +246,7 @@ async function addToFavorites(bookId) {
         
         favorites.push(bookId);
         showToast('Добавлено в избранное', 'Книга сохранена в избранном', 'success');
+        // Просто перерисовываем с теми же книгами
         renderBooks(allBooks);
         return true;
     } catch (error) {
@@ -272,6 +274,7 @@ async function removeFromFavorites(bookId) {
         
         favorites = favorites.filter(id => id !== bookId);
         showToast('Удалено из избранного', 'Книга удалена из избранного', 'success');
+        // Просто перерисовываем с теми же книгами
         renderBooks(allBooks);
         return true;
     } catch (error) {
@@ -285,12 +288,12 @@ function isFavorite(bookId) {
 }
 
 // ========== ФУНКЦИЯ ОТРИСОВКИ ==========
-let allBooks = [];
-
 function renderBooks(books) {
-    allBooks = books;
     const booksContainer = document.getElementById('booksGrid');
     if (!booksContainer) return;
+    
+    // Сохраняем книги в глобальную переменную
+    allBooks = books;
     
     if (!books || books.length === 0) {
         booksContainer.innerHTML = '<div style="text-align: center; padding: 40px;">📚 Книги не найдены</div>';
