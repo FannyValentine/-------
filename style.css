@@ -1331,3 +1331,30 @@ h2 {
         gap: 8px;
     }
 }
+    /* ========== ХЛЕБНЫЕ КРОШКИ (ГЛОБАЛЬНЫЕ) ========== */
+.breadcrumbs {
+    padding: 16px 0;
+    background: #f9f7f2;
+    border-bottom: 1px solid #e8e4dc;
+}
+
+.breadcrumbs a {
+    color: #5a6e7c;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.breadcrumbs a:hover {
+    color: #1e3c3a;
+    text-decoration: underline;
+}
+
+.breadcrumbs .current {
+    color: #1e3c3a;
+    font-weight: 600;
+}
+
+.breadcrumbs span {
+    margin: 0 8px;
+    color: #cbd5e1;
+}

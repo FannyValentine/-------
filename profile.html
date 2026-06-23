@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Профиль — Ebook</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="profile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-book-open"></i>
+                <span>Ebook</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Главная</a>
+                <a href="catalog.html" class="nav-link">Каталог</a>
+                <a href="rentals.html" class="nav-link">Аренда</a>
+                <a href="favorites.html" class="nav-link">Избранное</a>
+            </nav>
+            <div class="header-actions">
+                <div style="position: relative;">
+                    <button class="icon-btn cart-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge">0</span>
+                    </button>
+                    <div id="cartDropdown" class="cart-dropdown">
+                        <div class="cart-header">
+                            <h3><i class="fas fa-shopping-cart"></i> Моя корзина</h3>
+                        </div>
+                        <div id="cartItems" class="cart-items">
+                            <div class="cart-empty">
+                                <i class="fas fa-shopping-cart"></i>
+                                <p>Корзина пуста</p>
+                                <small>Добавьте книги из каталога</small>
+                            </div>
+                        </div>
+                        <div class="cart-footer">
+                            <div class="cart-total">
+                                <span>Итого:</span>
+                                <span id="cartTotal">0 ₽</span>
+                            </div>
+                            <button id="checkoutBtn" class="cart-checkout-btn">Оформить заказ</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="authButtons">
+                    <button class="btn-outline" id="openLoginModal">Войти</button>
+                </div>
+                <div id="userMenuContainer"></div>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Хлебные крошки -->
+        <div class="breadcrumbs">
+            <div class="container">
+                <a href="index.html">Главная</a>
+                <span>/</span>
+                <span class="current">Профиль</span>
+            </div>
+        </div>
+
+        <!-- Профиль -->
+        <section class="profile-section">
+            <div class="container">
+                <div class="profile-wrapper">
+                    <!-- Аватар и основная информация -->
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <div class="avatar-circle" id="avatarCircle">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <button class="avatar-upload-btn" id="avatarUploadBtn">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                            <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                        </div>
+                        <div class="profile-name">
+                            <h1 id="profileUsername">Пользователь</h1>
+                            <p id="profileEmail">email@example.com</p>
+                            <span class="profile-role" id="profileRole">Пользователь</span>
+                        </div>
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <span class="stat-number" id="statRentals">0</span>
+                                <span class="stat-label">Аренд</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="statFavorites">0</span>
+                                <span class="stat-label">Избранных</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="statBooks">0</span>
+                                <span class="stat-label">Куплено</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Редактирование профиля -->
+                    <div class="profile-content">
+                        <div class="profile-tabs">
+                            <button class="tab-btn active" data-tab="info">Личная информация</button>
+                            <button class="tab-btn" data-tab="security">Безопасность</button>
+                            <button class="tab-btn" data-tab="settings">Настройки</button>
+                        </div>
+
+                        <!-- Вкладка: Личная информация -->
+                        <div class="tab-content active" id="tab-info">
+                            <form id="profileForm" class="profile-form">
+                                <div class="form-group">
+                                    <label for="editUsername">Имя пользователя</label>
+                                    <input type="text" id="editUsername" placeholder="Введите имя пользователя">
+                                </div>
+                                <div class="form-group">
+                                    <label for="editEmail">Email</label>
+                                    <input type="email" id="editEmail" placeholder="email@example.com" disabled>
+                                    <small class="form-hint">Email нельзя изменить</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editBio">О себе</label>
+                                    <textarea id="editBio" rows="4" placeholder="Расскажите о себе..."></textarea>
+                                </div>
+                                <button type="submit" class="btn-primary" id="saveProfileBtn">
+                                    <i class="fas fa-save"></i> Сохранить изменения
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Вкладка: Безопасность -->
+                        <div class="tab-content" id="tab-security">
+                            <form id="securityForm" class="profile-form">
+                                <div class="form-group">
+                                    <label for="currentPassword">Текущий пароль</label>
+                                    <div class="password-input-wrapper">
+                                        <input type="password" id="currentPassword" placeholder="Введите текущий пароль">
+                                        <button type="button" class="password-toggle" data-target="currentPassword">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newPassword">Новый пароль</label>
+                                    <div class="password-input-wrapper">
+                                        <input type="password" id="newPassword" placeholder="Введите новый пароль">
+                                        <button type="button" class="password-toggle" data-target="newPassword">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <small class="form-hint">Минимум 6 символов</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmPassword">Подтвердите пароль</label>
+                                    <div class="password-input-wrapper">
+                                        <input type="password" id="confirmPassword" placeholder="Подтвердите новый пароль">
+                                        <button type="button" class="password-toggle" data-target="confirmPassword">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn-primary" id="changePasswordBtn">
+                                    <i class="fas fa-key"></i> Сменить пароль
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Вкладка: Настройки -->
+                        <div class="tab-content" id="tab-settings">
+                            <div class="settings-group">
+                                <h3>Уведомления</h3>
+                                <div class="settings-item">
+                                    <label class="switch-label">
+                                        <input type="checkbox" id="notifyRental">
+                                        <span class="switch-slider"></span>
+                                        <span class="switch-text">Уведомления о скором окончании аренды</span>
+                                    </label>
+                                </div>
+                                <div class="settings-item">
+                                    <label class="switch-label">
+                                        <input type="checkbox" id="notifyPromo">
+                                        <span class="switch-slider"></span>
+                                        <span class="switch-text">Акции и скидки</span>
+                                    </label>
+                                </div>
+                                <div class="settings-item">
+                                    <label class="switch-label">
+                                        <input type="checkbox" id="notifyNews">
+                                        <span class="switch-slider"></span>
+                                        <span class="switch-text">Новости библиотеки</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <button class="btn-outline" id="saveSettingsBtn" style="margin-top: 20px;">
+                                <i class="fas fa-save"></i> Сохранить настройки
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-col">
+                <div class="logo"><i class="fas fa-book-open"></i> Ebook</div>
+                <p>Ваша цифровая библиотека. Покупайте, арендуйте, читайте где угодно.</p>
+                <div class="socials">
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-vk"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Каталог</h4>
+                <ul>
+                    <li><a href="catalog.html?genre=классика"><i class="fas fa-chevron-right"></i> Классика</a></li>
+                    <li><a href="catalog.html?genre=фантастика"><i class="fas fa-chevron-right"></i> Фантастика</a></li>
+                    <li><a href="catalog.html?genre=бизнес"><i class="fas fa-chevron-right"></i> Бизнес</a></li>
+                    <li><a href="catalog.html?genre=приключения"><i class="fas fa-chevron-right"></i> Приключения</a></li>
+                    <li><a href="catalog.html?genre=психология"><i class="fas fa-chevron-right"></i> Психология</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Помощь</h4>
+                <ul>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Как арендовать</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Частые вопросы</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Правила сервиса</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Поддержка</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Контакты</h4>
+                <ul>
+                    <li><a href="mailto:support@ebook.ru"><i class="fas fa-envelope"></i> support@ebook.ru</a></li>
+                    <li><a href="tel:88005553535"><i class="fas fa-phone-alt"></i> 8 (800) 555-35-35</a></li>
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> Москва, ул. Книжная, 1</a></li>
+                    <li><a href="#"><i class="fas fa-clock"></i> 24/7</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Ebook. Все права защищены. <a href="#">Политика конфиденциальности</a></p>
+        </div>
+    </footer>
+
+    <!-- Модальное окно авторизации -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Вход в аккаунт</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            
+            <div id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="example@mail.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Пароль</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <button id="loginBtn" class="btn-primary auth-submit">Войти</button>
+                <p class="auth-switch">
+                    Нет аккаунта? <a href="#" id="switchToRegister">Зарегистрироваться</a>
+                </p>
+                <p class="auth-switch">
+                    <a href="#" id="forgotPassword">Забыли пароль?</a>
+                </p>
+            </div>
+            
+            <div id="registerForm" class="auth-form" style="display: none;">
+                <div class="form-group">
+                    <label for="regUsername">Имя пользователя</label>
+                    <input type="text" id="regUsername" placeholder="Иван Иванов" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input type="email" id="regEmail" placeholder="example@mail.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Пароль</label>
+                    <input type="password" id="regPassword" placeholder="минимум 6 символов" required>
+                </div>
+                <div class="form-group">
+                    <label for="regConfirmPassword">Подтвердите пароль</label>
+                    <input type="password" id="regConfirmPassword" placeholder="••••••••" required>
+                </div>
+                <button id="registerBtn" class="btn-primary auth-submit">Зарегистрироваться</button>
+                <p class="auth-switch">
+                    Уже есть аккаунт? <a href="#" id="switchToLogin">Войти</a>
+                </p>
+            </div>
+            
+            <div id="resetForm" class="auth-form" style="display: none;">
+                <div class="form-group">
+                    <label for="resetEmail">Email</label>
+                    <input type="email" id="resetEmail" placeholder="example@mail.com" required>
+                </div>
+                <button id="resetBtn" class="btn-primary auth-submit">Сбросить пароль</button>
+                <p class="auth-switch">
+                    <a href="#" id="backToLogin">Вернуться ко входу</a>
+                </p>
+            </div>
+            
+            <div id="authMessage" class="auth-message"></div>
+        </div>
+    </div>
+
+    <!-- Профиль пользователя -->
+    <div id="userMenu" class="user-menu" style="display: none;">
+        <div class="user-info">
+            <i class="fas fa-user-circle"></i>
+            <span id="userName"></span>
+        </div>
+        <div class="user-dropdown">
+            <a href="profile.html"><i class="fas fa-user"></i> Профиль</a>
+            <a href="rentals.html"><i class="fas fa-calendar-alt"></i> Мои аренды</a>
+            <a href="favorites.html"><i class="fas fa-heart"></i> Избранное</a>
+            <div class="divider"></div>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+        </div>
+    </div>
+    <div id="userMenuContainer"></div>
+
+    <script type="module" src="profile.js"></script>
+</body>
+</html>
