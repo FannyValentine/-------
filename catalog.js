@@ -408,24 +408,12 @@ function renderBooks() {
         return;
     }
     
-    // В функции renderBooks найдите блок с описанием и замените на:
-container.innerHTML = pageBooks.map(book => {
-    // Проверяем длину описания
-    const description = book.description || '';
-    const isLong = description.length > 100;
-    const shortDesc = isLong ? escapeHtml(description.substring(0, 100)) + '...' : escapeHtml(description);
-    const fullDesc = escapeHtml(description);
-    const hasDescription = description.length > 0;
-    
-    return `
+    container.innerHTML = pageBooks.map(book => `
         <div class="book-card" data-id="${book.id}">
             <div class="book-cover">
                 <img src="${book.cover_image || 'https://placehold.co/300x400/e2e8f0/1e3c3a?text=📖+No+Cover'}" 
                      alt="${book.title}" 
                      onerror="this.src='https://placehold.co/300x400/e2e8f0/1e3c3a?text=📖+No+Cover'">
-                <button class="favorite-btn ${isFavorite(book.id) ? 'active' : ''}" data-id="${book.id}">
-                    <i class="fas fa-heart"></i>
-                </button>
             </div>
             <div class="book-info">
                 <div class="book-header">
@@ -435,16 +423,7 @@ container.innerHTML = pageBooks.map(book => {
                     </button>
                 </div>
                 <div class="book-author">${escapeHtml(book.author)}</div>
-                ${hasDescription ? `
-                    <div class="book-description" data-full="${fullDesc}" data-short="${shortDesc}">
-                        ${currentView === 'list' ? fullDesc : shortDesc}
-                    </div>
-                    ${isLong && currentView === 'grid' ? `
-                        <button class="description-toggle" onclick="toggleDescription(this)">
-                            Читать далее <i class="fas fa-chevron-down"></i>
-                        </button>
-                    ` : ''}
-                ` : ''}
+                <div class="book-description">${book.description ? escapeHtml(book.description.substring(0, 80)) + '...' : ''}</div>
                 <div class="book-actions">
                     <span class="price">${book.purchase_price || book.price} ₽</span>
                     <div>
@@ -454,9 +433,9 @@ container.innerHTML = pageBooks.map(book => {
                 </div>
             </div>
         </div>
-        `;
-    }).join('');
+    `).join('');
     
+    // Обработчики для кнопок избранного (только в заголовке)
     document.querySelectorAll('.favorite-btn').forEach(btn => {
         btn.addEventListener('click', async (e) => {
             e.stopPropagation();
@@ -471,6 +450,7 @@ container.innerHTML = pageBooks.map(book => {
         });
     });
     
+    // Обработчики для кнопок корзины
     document.querySelectorAll('.rent-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -729,6 +709,26 @@ async function updateUserUI() {
             userMenuContainer.appendChild(userMenu);
             userMenu.style.display = 'block';
             if (userName) userName.textContent = user.username || user.email?.split('@')[0] || 'Пользователь';
+            
+            // Добавляем обработчик клика по пользователю
+            const userInfo = userMenu.querySelector('.user-info');
+            const dropdown = userMenu.querySelector('.user-dropdown');
+            
+            // Удаляем старые обработчики, чтобы не было дублирования
+            const newUserInfo = userInfo.cloneNode(true);
+            userInfo.parentNode.replaceChild(newUserInfo, userInfo);
+            
+            newUserInfo.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.classList.toggle('show');
+            });
+            
+            // Закрываем при клике вне меню
+            document.addEventListener('click', function closeDropdown(e) {
+                if (!userMenu.contains(e.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
         }
     } else {
         if (authButtons) authButtons.style.display = 'block';
@@ -947,7 +947,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (dropdown && cartButton && !cartButton.contains(e.target) && !dropdown.contains(e.target)) {
             dropdown.classList.remove('show');
         }
+        // Закрываем меню пользователя при клике вне
+    document.addEventListener('click', function(e) {
+        const userMenu = document.getElementById('userMenu');
+        const dropdown = userMenu?.querySelector('.user-dropdown');
+        if (userMenu && dropdown && !userMenu.contains(e.target)) {
+            dropdown.classList.remove('show');
+        }
     });
+    
+    // Закрываем меню при нажатии Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.user-dropdown.show').forEach(d => {
+                d.classList.remove('show');
+            });
+            document.querySelectorAll('.cart-dropdown.show').forEach(d => {
+                d.classList.remove('show');
+            });
+        }
+    });
+});
     // ========== РАСКРЫТИЕ ОПИСАНИЯ ==========
 window.toggleDescription = function(button) {
     const description = button.previousElementSibling;

@@ -604,6 +604,26 @@ async function updateUserUI() {
             userMenuContainer.appendChild(userMenu);
             userMenu.style.display = 'block';
             if (userName) userName.textContent = user.username || user.email?.split('@')[0] || 'Пользователь';
+            
+            // Добавляем обработчик клика по пользователю
+            const userInfo = userMenu.querySelector('.user-info');
+            const dropdown = userMenu.querySelector('.user-dropdown');
+            
+            // Удаляем старые обработчики, чтобы не было дублирования
+            const newUserInfo = userInfo.cloneNode(true);
+            userInfo.parentNode.replaceChild(newUserInfo, userInfo);
+            
+            newUserInfo.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.classList.toggle('show');
+            });
+            
+            // Закрываем при клике вне меню
+            document.addEventListener('click', function closeDropdown(e) {
+                if (!userMenu.contains(e.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
         }
     } else {
         if (authButtons) authButtons.style.display = 'block';
@@ -793,9 +813,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             dropdown.classList.remove('show');
         }
     });
-    
+    // Закрываем меню при нажатии Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.user-dropdown.show').forEach(d => {
+                d.classList.remove('show');
+            });
+            document.querySelectorAll('.cart-dropdown.show').forEach(d => {
+                d.classList.remove('show');
+            });
+        }
+    });
     const checkoutBtn = document.getElementById('checkoutBtn');
     if (checkoutBtn) checkoutBtn.addEventListener('click', checkout);
     
     updateCartBadge();
 });
+    
