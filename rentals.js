@@ -15,7 +15,13 @@ let filteredRentals = [];
 
 // ========== КОРЗИНА ==========
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
+// ========== СОСТОЯНИЕ С СОХРАНЕНИЕМ В LOCALSTORAGE ==========
+let allRentals = JSON.parse(localStorage.getItem('rentals')) || [];
+let filteredRentals = [...allRentals];
 
+function saveRentalsState() {
+    localStorage.setItem('rentals', JSON.stringify(allRentals));
+}
 function saveCart() {
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartBadge();
@@ -197,6 +203,7 @@ async function loadRentals() {
         
         allRentals = rentals || [];
         filteredRentals = [...allRentals];
+        saveRentalsState();
         renderRentals();
         console.log(`✅ Загружено ${allRentals.length} аренд`);
     } catch (error) {
@@ -205,6 +212,7 @@ async function loadRentals() {
         filteredRentals = [];
         renderRentals();
     }
+    
 }
 
 // ========== ФИЛЬТРАЦИЯ ==========
