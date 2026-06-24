@@ -9,11 +9,16 @@ import {
     resetPassword
 } from './auth.js';
 
-// ========== СОСТОЯНИЕ ==========
-let favorites = [];
-let allBooks = [];
+// ========== СОСТОЯНИЕ С СОХРАНЕНИЕМ В LOCALSTORAGE ==========
+let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+let allBooks = JSON.parse(localStorage.getItem('favorites_books')) || [];
 let filteredBooks = [];
-let isInitialized = false;
+
+// ========== СОХРАНЕНИЕ СОСТОЯНИЯ ==========
+function saveState() {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    localStorage.setItem('favorites_books', JSON.stringify(allBooks));
+}
 
 // ========== КОРЗИНА ==========
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -77,7 +82,6 @@ function addToCart(book, type, price) {
     }
     
     saveCart();
-    // Перерисовываем корзину и сохраняем состояние книг
     renderBooks();
 }
 
@@ -85,7 +89,6 @@ function removeFromCart(itemId, type) {
     cart = cart.filter(item => !(item.id === itemId && item.type === type));
     saveCart();
     showToast('Удалено из корзины', 'Товар удален из корзины', 'success');
-    // Перерисовываем корзину и сохраняем состояние книг
     renderBooks();
 }
 
@@ -139,6 +142,7 @@ function renderCartDropdown() {
     document.querySelectorAll('.cart-item-remove').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
+            e.preventDefault();
             const id = parseInt(btn.dataset.id);
             const type = btn.dataset.type;
             removeFromCart(id, type);
@@ -176,6 +180,12 @@ async function checkout() {
 // ========== ЗАГРУЗКА КНИГ ==========
 async function loadBooksFromSupabase() {
     try {
+        // Проверяем, есть ли данные в localStorage
+        if (allBooks && allBooks.length > 0) {
+            console.log('📚 Используем книги из localStorage');
+            return allBooks;
+        }
+        
         const { data: books, error } = await supabase
             .from('books')
             .select('*');
@@ -185,6 +195,8 @@ async function loadBooksFromSupabase() {
             return [];
         }
         
+        allBooks = books || [];
+        saveState();
         console.log(`✅ Загружено ${books.length} книг для избранного`);
         return books || [];
     } catch (error) {
@@ -198,6 +210,7 @@ async function loadFavorites() {
     const user = getCurrentUser();
     if (!user) {
         favorites = [];
+        saveState();
         return;
     }
     
@@ -210,15 +223,18 @@ async function loadFavorites() {
         if (error) {
             console.error('Ошибка загрузки избранного:', error);
             favorites = [];
+            saveState();
             return;
         }
         
         favorites = data.map(item => item.book_id);
+        saveState();
         console.log(`✅ Загружено ${favorites.length} избранных книг`);
         return favorites;
     } catch (error) {
         console.error('Ошибка:', error);
         favorites = [];
+        saveState();
         return [];
     }
 }
@@ -243,8 +259,8 @@ async function addToFavorites(bookId) {
         }
         
         favorites.push(bookId);
+        saveState();
         showToast('Добавлено в избранное', 'Книга сохранена в избранном', 'success');
-        // Перерисовываем с сохранением состояния
         renderBooks();
         return true;
     } catch (error) {
@@ -271,8 +287,8 @@ async function removeFromFavorites(bookId) {
         }
         
         favorites = favorites.filter(id => id !== bookId);
+        saveState();
         showToast('Удалено из избранного', 'Книга удалена из избранного', 'success');
-        // Перерисовываем с сохранением состояния
         renderBooks();
         return true;
     } catch (error) {
@@ -341,46 +357,58 @@ function renderBooks() {
         </div>
     `).join('');
     
-    // Обработчики для кнопок избранного
-    document.querySelectorAll('.favorite-btn').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            const bookId = parseInt(btn.dataset.id);
-            await removeFromFavorites(bookId);
-        });
+    // Добавляем обработчики с использованием делегирования
+    container.querySelectorAll('.favorite-btn').forEach(btn => {
+        btn.removeEventListener('click', handleFavoriteClick);
+        btn.addEventListener('click', handleFavoriteClick);
     });
     
-    // Обработчики для кнопок корзины
-    document.querySelectorAll('.rent-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            const book = {
-                id: parseInt(btn.dataset.id),
-                title: btn.dataset.title,
-                author: btn.dataset.author,
-                cover_image: btn.dataset.cover
-            };
-            const price = parseInt(btn.dataset.price);
-            addToCart(book, 'rent', price);
-        });
+    container.querySelectorAll('.rent-btn').forEach(btn => {
+        btn.removeEventListener('click', handleRentClick);
+        btn.addEventListener('click', handleRentClick);
     });
     
-    document.querySelectorAll('.buy-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            const book = {
-                id: parseInt(btn.dataset.id),
-                title: btn.dataset.title,
-                author: btn.dataset.author,
-                cover_image: btn.dataset.cover
-            };
-            const price = parseInt(btn.dataset.price);
-            addToCart(book, 'buy', price);
-        });
+    container.querySelectorAll('.buy-btn').forEach(btn => {
+        btn.removeEventListener('click', handleBuyClick);
+        btn.addEventListener('click', handleBuyClick);
     });
+}
+
+// Обработчики событий (вынесены для предотвращения дублирования)
+function handleFavoriteClick(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    const btn = e.currentTarget;
+    const bookId = parseInt(btn.dataset.id);
+    removeFromFavorites(bookId);
+}
+
+function handleRentClick(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    const btn = e.currentTarget;
+    const book = {
+        id: parseInt(btn.dataset.id),
+        title: btn.dataset.title,
+        author: btn.dataset.author,
+        cover_image: btn.dataset.cover
+    };
+    const price = parseInt(btn.dataset.price);
+    addToCart(book, 'rent', price);
+}
+
+function handleBuyClick(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    const btn = e.currentTarget;
+    const book = {
+        id: parseInt(btn.dataset.id),
+        title: btn.dataset.title,
+        author: btn.dataset.author,
+        cover_image: btn.dataset.cover
+    };
+    const price = parseInt(btn.dataset.price);
+    addToCart(book, 'buy', price);
 }
 
 // ========== ПОИСК В ИЗБРАННОМ ==========
@@ -448,44 +476,16 @@ function setupSearch() {
                         </div>
                     `).join('');
                     
-                    // Добавляем обработчики для поиска
-                    document.querySelectorAll('.favorite-btn').forEach(btn => {
-                        btn.addEventListener('click', async (e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            const bookId = parseInt(btn.dataset.id);
-                            await removeFromFavorites(bookId);
-                        });
+                    container.querySelectorAll('.favorite-btn').forEach(btn => {
+                        btn.addEventListener('click', handleFavoriteClick);
                     });
                     
-                    document.querySelectorAll('.rent-btn').forEach(btn => {
-                        btn.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            const book = {
-                                id: parseInt(btn.dataset.id),
-                                title: btn.dataset.title,
-                                author: btn.dataset.author,
-                                cover_image: btn.dataset.cover
-                            };
-                            const price = parseInt(btn.dataset.price);
-                            addToCart(book, 'rent', price);
-                        });
+                    container.querySelectorAll('.rent-btn').forEach(btn => {
+                        btn.addEventListener('click', handleRentClick);
                     });
                     
-                    document.querySelectorAll('.buy-btn').forEach(btn => {
-                        btn.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            const book = {
-                                id: parseInt(btn.dataset.id),
-                                title: btn.dataset.title,
-                                author: btn.dataset.author,
-                                cover_image: btn.dataset.cover
-                            };
-                            const price = parseInt(btn.dataset.price);
-                            addToCart(book, 'buy', price);
-                        });
+                    container.querySelectorAll('.buy-btn').forEach(btn => {
+                        btn.addEventListener('click', handleBuyClick);
                     });
                 }
             }, 500);
@@ -703,6 +703,7 @@ async function handleLogin() {
             await updateUserUI();
             await loadFavorites();
             allBooks = await loadBooksFromSupabase();
+            saveState();
             renderBooks();
         }, 1500);
     } else {
@@ -717,6 +718,7 @@ async function handleLogout() {
         await updateUserUI();
         favorites = [];
         allBooks = await loadBooksFromSupabase();
+        saveState();
         renderBooks();
         cart = [];
         saveCart();
@@ -813,7 +815,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     await updateUserUI();
     await loadFavorites();
     
-    allBooks = await loadBooksFromSupabase();
+    // Загружаем книги из Supabase только если их нет в localStorage
+    if (!allBooks || allBooks.length === 0) {
+        allBooks = await loadBooksFromSupabase();
+        saveState();
+    }
+    
     renderBooks();
     
     setupSearch();
