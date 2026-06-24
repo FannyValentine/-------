@@ -75,12 +75,15 @@ function addToCart(book, type, price) {
     }
     
     saveCart();
+    // Перерисовываем корзину
+    renderCartDropdown();
 }
 
 function removeFromCart(itemId, type) {
     cart = cart.filter(item => !(item.id === itemId && item.type === type));
     saveCart();
     showToast('Удалено из корзины', 'Товар удален из корзины', 'success');
+    renderCartDropdown();
 }
 
 function renderCartDropdown() {
@@ -305,7 +308,7 @@ function renderRentals() {
     if (!allRentals || allRentals.length === 0) {
         container.innerHTML = '';
         if (emptyState) emptyState.style.display = 'block';
-        if (resultsCount) resultsCount.textContent = 'Нет аренд';
+        if (resultsCount) resultsCount.textContent = 'У вас пока нет арендованных книг';
         return;
     }
     
@@ -352,7 +355,6 @@ function renderRentals() {
             daysLeftText = `${daysLeft} дн.`;
         }
         
-        const startDate = new Date(rental.start_date);
         const endDateFormatted = endDate.toLocaleDateString('ru-RU', {
             day: 'numeric',
             month: 'long',
