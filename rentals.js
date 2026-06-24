@@ -9,12 +9,6 @@ import {
     resetPassword
 } from './auth.js';
 
-// ========== СОСТОЯНИЕ ==========
-let allRentals = [];
-let filteredRentals = [];
-
-// ========== КОРЗИНА ==========
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
 // ========== СОСТОЯНИЕ С СОХРАНЕНИЕМ В LOCALSTORAGE ==========
 let allRentals = JSON.parse(localStorage.getItem('rentals')) || [];
 let filteredRentals = [...allRentals];
@@ -22,6 +16,10 @@ let filteredRentals = [...allRentals];
 function saveRentalsState() {
     localStorage.setItem('rentals', JSON.stringify(allRentals));
 }
+
+// ========== КОРЗИНА ==========
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
 function saveCart() {
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartBadge();
@@ -81,7 +79,6 @@ function addToCart(book, type, price) {
     }
     
     saveCart();
-    // Перерисовываем корзину
     renderCartDropdown();
 }
 
@@ -142,6 +139,7 @@ function renderCartDropdown() {
     document.querySelectorAll('.cart-item-remove').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
+            e.preventDefault();
             const id = parseInt(btn.dataset.id);
             const type = btn.dataset.type;
             removeFromCart(id, type);
@@ -182,6 +180,7 @@ async function loadRentals() {
     if (!user) {
         allRentals = [];
         filteredRentals = [];
+        saveRentalsState();
         renderRentals();
         return;
     }
@@ -197,6 +196,7 @@ async function loadRentals() {
             console.error('Ошибка загрузки аренд:', error);
             allRentals = [];
             filteredRentals = [];
+            saveRentalsState();
             renderRentals();
             return;
         }
@@ -210,9 +210,9 @@ async function loadRentals() {
         console.error('Ошибка:', error);
         allRentals = [];
         filteredRentals = [];
+        saveRentalsState();
         renderRentals();
     }
-    
 }
 
 // ========== ФИЛЬТРАЦИЯ ==========
@@ -315,7 +315,15 @@ function renderRentals() {
     // Проверяем, что аренды загружены
     if (!allRentals || allRentals.length === 0) {
         container.innerHTML = '';
-        if (emptyState) emptyState.style.display = 'block';
+        if (emptyState) {
+            emptyState.style.display = 'block';
+            emptyState.innerHTML = `
+                <i class="fas fa-calendar-alt" style="font-size: 4rem; color: #cbd5e1; margin-bottom: 20px; display: block;"></i>
+                <h2>У вас пока нет арендованных книг</h2>
+                <p>Перейдите в каталог и арендуйте книгу, которая вам понравилась</p>
+                <a href="catalog.html" class="btn-primary" style="margin-top: 16px;">Перейти в каталог</a>
+            `;
+        }
         if (resultsCount) resultsCount.textContent = 'У вас пока нет арендованных книг';
         return;
     }
@@ -324,7 +332,14 @@ function renderRentals() {
     
     if (filteredRentals.length === 0) {
         container.innerHTML = '';
-        if (emptyState) emptyState.style.display = 'block';
+        if (emptyState) {
+            emptyState.style.display = 'block';
+            emptyState.innerHTML = `
+                <i class="fas fa-search" style="font-size: 4rem; color: #cbd5e1; margin-bottom: 20px; display: block;"></i>
+                <h2>Нет аренд по выбранному фильтру</h2>
+                <p>Попробуйте изменить параметры фильтрации</p>
+            `;
+        }
         if (resultsCount) resultsCount.textContent = 'Нет аренд по выбранному фильтру';
         return;
     }
@@ -671,6 +686,7 @@ async function handleLogout() {
         await updateUserUI();
         allRentals = [];
         filteredRentals = [];
+        saveRentalsState();
         renderRentals();
         cart = [];
         saveCart();
@@ -765,7 +781,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     await checkCurrentUser();
     await updateUserUI();
-    await loadRentals();
+    
+    // Загружаем аренды из Supabase только если их нет в localStorage
+    if (!allRentals || allRentals.length === 0) {
+        await loadRentals();
+    } else {
+        renderRentals();
+    }
     
     setupSearch();
     mobileMenu();
