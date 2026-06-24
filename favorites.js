@@ -13,6 +13,7 @@ import {
 let favorites = [];
 let allBooks = [];
 let filteredBooks = [];
+let isInitialized = false;
 
 // ========== КОРЗИНА ==========
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -76,12 +77,16 @@ function addToCart(book, type, price) {
     }
     
     saveCart();
+    // Перерисовываем корзину и сохраняем состояние книг
+    renderBooks();
 }
 
 function removeFromCart(itemId, type) {
     cart = cart.filter(item => !(item.id === itemId && item.type === type));
     saveCart();
     showToast('Удалено из корзины', 'Товар удален из корзины', 'success');
+    // Перерисовываем корзину и сохраняем состояние книг
+    renderBooks();
 }
 
 function renderCartDropdown() {
@@ -180,6 +185,7 @@ async function loadBooksFromSupabase() {
             return [];
         }
         
+        console.log(`✅ Загружено ${books.length} книг для избранного`);
         return books || [];
     } catch (error) {
         console.error('Ошибка подключения:', error);
@@ -208,6 +214,7 @@ async function loadFavorites() {
         }
         
         favorites = data.map(item => item.book_id);
+        console.log(`✅ Загружено ${favorites.length} избранных книг`);
         return favorites;
     } catch (error) {
         console.error('Ошибка:', error);
@@ -237,7 +244,7 @@ async function addToFavorites(bookId) {
         
         favorites.push(bookId);
         showToast('Добавлено в избранное', 'Книга сохранена в избранном', 'success');
-        // Исправлено: сохраняем книги и перерисовываем
+        // Перерисовываем с сохранением состояния
         renderBooks();
         return true;
     } catch (error) {
@@ -265,7 +272,7 @@ async function removeFromFavorites(bookId) {
         
         favorites = favorites.filter(id => id !== bookId);
         showToast('Удалено из избранного', 'Книга удалена из избранного', 'success');
-        // Исправлено: сохраняем книги и перерисовываем
+        // Перерисовываем с сохранением состояния
         renderBooks();
         return true;
     } catch (error) {
@@ -289,6 +296,8 @@ function renderBooks() {
     // Проверяем, что allBooks загружены
     if (!allBooks || allBooks.length === 0) {
         container.innerHTML = '<div style="text-align: center; padding: 40px;">📚 Загрузка книг...</div>';
+        if (emptyState) emptyState.style.display = 'none';
+        if (resultsCount) resultsCount.textContent = 'Загрузка...';
         return;
     }
     
@@ -336,6 +345,7 @@ function renderBooks() {
     document.querySelectorAll('.favorite-btn').forEach(btn => {
         btn.addEventListener('click', async (e) => {
             e.stopPropagation();
+            e.preventDefault();
             const bookId = parseInt(btn.dataset.id);
             await removeFromFavorites(bookId);
         });
@@ -345,6 +355,7 @@ function renderBooks() {
     document.querySelectorAll('.rent-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
+            e.preventDefault();
             const book = {
                 id: parseInt(btn.dataset.id),
                 title: btn.dataset.title,
@@ -359,6 +370,7 @@ function renderBooks() {
     document.querySelectorAll('.buy-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
+            e.preventDefault();
             const book = {
                 id: parseInt(btn.dataset.id),
                 title: btn.dataset.title,
@@ -436,9 +448,11 @@ function setupSearch() {
                         </div>
                     `).join('');
                     
+                    // Добавляем обработчики для поиска
                     document.querySelectorAll('.favorite-btn').forEach(btn => {
                         btn.addEventListener('click', async (e) => {
                             e.stopPropagation();
+                            e.preventDefault();
                             const bookId = parseInt(btn.dataset.id);
                             await removeFromFavorites(bookId);
                         });
@@ -447,6 +461,7 @@ function setupSearch() {
                     document.querySelectorAll('.rent-btn').forEach(btn => {
                         btn.addEventListener('click', (e) => {
                             e.stopPropagation();
+                            e.preventDefault();
                             const book = {
                                 id: parseInt(btn.dataset.id),
                                 title: btn.dataset.title,
@@ -461,6 +476,7 @@ function setupSearch() {
                     document.querySelectorAll('.buy-btn').forEach(btn => {
                         btn.addEventListener('click', (e) => {
                             e.stopPropagation();
+                            e.preventDefault();
                             const book = {
                                 id: parseInt(btn.dataset.id),
                                 title: btn.dataset.title,
